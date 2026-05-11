@@ -1,13 +1,24 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
-app = FastAPI()
+app = FastAPI(
+    title="Sample FastAPI Service",
+    version="1.0.0",
+    description="A simple FastAPI application with health check endpoint.",
+)
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI!"}
+@app.get("/", tags=["Root"])
+async def read_root():
+    return JSONResponse(
+        status_code=200,
+        content={"message": "Hello, FastAPI!"},
+    )
 
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+@app.get("/health", tags=["Health"])
+async def health_check():
+    return JSONResponse(
+        status_code=200,
+        content={"status": "ok"},
+    )
