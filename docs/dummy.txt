@@ -1,1 +1,42 @@
-//This file contains sample text for rag 
+# company_faq.txt
+
+OpenAI Company FAQ
+
+What is OpenAI?
+OpenAI is an AI research and deployment company focused on creating safe and useful artificial intelligence systems.
+
+What is ChatGPT?
+ChatGPT is a conversational AI model developed by OpenAI that can answer questions, generate text, summarize information, and assist with coding.
+
+What is Retrieval-Augmented Generation (RAG)?
+RAG is an AI architecture that combines information retrieval with language generation. It retrieves relevant documents from a knowledge base before generating a response.
+
+Benefits of RAG:
+- Reduces hallucinations
+- Uses private/custom data
+- Keeps responses grounded in retrieved context
+- Easier to update knowledge without retraining
+
+Typical RAG Pipeline:
+1. Load documents
+2. Split text into chunks
+3. Generate embeddings
+4. Store embeddings in a vector database
+5. Retrieve relevant chunks
+6. Send retrieved context to the LLM
+7. Generate final answer
+
+Common Vector Databases:
+- FAISS
+- Pinecone
+- ChromaDB
+- Weaviate
+
+Popular Embedding Models:
+- OpenAI text-embedding models
+- Sentence Transformers
+- BGE embeddings
+
+Example Question:
+Q: What is the purpose of RAG?
+A: RAG helps language models answer questions using external knowledge sources.
