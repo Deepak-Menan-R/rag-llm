@@ -1,19 +1,36 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from openai import OpenAI
+import google.generativeai as genai
 import uvicorn
 import os
 
 app = FastAPI(
     title="Sample FastAPI Service",
     version="1.0.0",
-    description="A simple FastAPI application with OpenAI test endpoint.",
+    description="FastAPI app with OpenAI and Gemini test endpoints.",
 )
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# -----------------------------
+# OpenAI Client
+# -----------------------------
+openai_client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+
+# -----------------------------
+# Gemini Client
+# -----------------------------
+genai.configure(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
 
+# -----------------------------
+# Root Endpoint
+# -----------------------------
 @app.get("/", tags=["Root"])
 async def read_root():
     return JSONResponse(
@@ -22,6 +39,9 @@ async def read_root():
     )
 
 
+# -----------------------------
+# Health Check
+# -----------------------------
 @app.get("/health", tags=["Health"])
 async def health_check():
     return JSONResponse(
@@ -30,10 +50,13 @@ async def health_check():
     )
 
 
+# -----------------------------
+# OpenAI Test Endpoint
+# -----------------------------
 @app.get("/openai-test", tags=["OpenAI"])
 async def openai_test():
     try:
-        response = client.chat.completions.create(
+        response = openai_client.chat.completions.create(
             model="gpt-4.1-mini",
             messages=[
                 {
@@ -47,7 +70,8 @@ async def openai_test():
         return JSONResponse(
             status_code=200,
             content={
-                "response": response.choices[0].message.content
+                "provider": "openai",
+                "response": response.choices[0].message.content,
             },
         )
 
@@ -58,6 +82,34 @@ async def openai_test():
         )
 
 
+# -----------------------------
+# Gemini Test Endpoint
+# -----------------------------
+@app.get("/gemini-test", tags=["Gemini"])
+async def gemini_test():
+    try:
+        response = gemini_model.generate_content(
+            "Say hello from Gemini API"
+        )
+
+        return JSONResponse(
+            status_code=200,
+            content={
+                "provider": "gemini",
+                "response": response.text,
+            },
+        )
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)},
+        )
+
+
+# -----------------------------
+# Run Server
+# -----------------------------
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
