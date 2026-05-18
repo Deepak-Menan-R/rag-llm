@@ -2,13 +2,14 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from openai import OpenAI
 import google.generativeai as genai
+from anthropic import Anthropic
 import uvicorn
 import os
 
 app = FastAPI(
     title="Sample FastAPI Service",
     version="1.0.0",
-    description="FastAPI app with OpenAI and Gemini test endpoints.",
+    description="FastAPI app with OpenAI, Gemini, and Claude test endpoints.",
 )
 
 # -----------------------------
@@ -27,6 +28,12 @@ genai.configure(
 
 gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
+# -----------------------------
+# Claude Client
+# -----------------------------
+claude_client = Anthropic(
+    api_key=os.getenv("ANTHROPIC_API_KEY")
+)
 
 # -----------------------------
 # Root Endpoint
@@ -97,6 +104,38 @@ async def gemini_test():
             content={
                 "provider": "gemini",
                 "response": response.text,
+            },
+        )
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)},
+        )
+
+
+# -----------------------------
+# Claude Test Endpoint
+# -----------------------------
+@app.get("/claude-test", tags=["Claude"])
+async def claude_test():
+    try:
+        response = claude_client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=20,
+            messages=[
+                {
+                    "role": "user",
+                    "content": "Say hello from Claude API",
+                }
+            ],
+        )
+
+        return JSONResponse(
+            status_code=200,
+            content={
+                "provider": "claude",
+                "response": response.content[0].text,
             },
         )
 
