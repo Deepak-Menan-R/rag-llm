@@ -1,8 +1,8 @@
 Flask
 python-dotenv
-gunicorn          # Production WSGI server (Linux/macOS deployments)
-requests          # Making HTTP API calls
-flask-cors        # CORS support for frontend apps
-Flask-SQLAlchemy  # Database ORM
-psycopg2-binary   # PostgreSQL driver
-PyMySQL           # MySQL driver
+gunicorn          
+requests          
+flask-cors        
+Flask-SQLAlchemy  
+psycopg2-binary   
+PyMySQL           
