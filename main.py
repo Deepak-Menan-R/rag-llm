@@ -7,7 +7,7 @@ import uvicorn
 import os
 
 app = FastAPI(
-    title="Sample FastAPI Service",
+    title="Sample FastAPI Services",
     version="1.0.0",
     description="FastAPI app with OpenAI, Gemini, and Claude test endpoints.",
 )
